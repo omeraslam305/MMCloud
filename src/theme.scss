@@ -1,0 +1,37 @@
+// We can import another css file and use its variable
+// @import "filename.scss"
+@import "~@angular/material/_theming";
+@include mat-core();
+$app-primary: mat-palette($mat-cyan, 900);
+$app-accent: mat-palette($mat-deep-orange, 300);
+$app-warn: mat-palette($mat-red);
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+@include angular-material-theme($app-theme);
+$primary: #001D15;
+.mainHeader {
+  background: $primary;
+}
+
+@mixin soft-border {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+// We can pass the values with parameters
+@mixin border($border-radius) {
+  border-radius: $border-radius;
+}
+
+.box {
+  @include soft-border();
+  @include border(10px);
+}
+
+.modern-box {
+  @include soft-border();
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #EFEFED;
+}

@@ -1,0 +1,24 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row fxLayout="row">
+    <div fxFlex="10">
+      <img class="company-logo" src="../../assets/360-icon.png">
+    </div>
+    <div fxFlex="3"></div>
+    <nav mat-tab-nav-bar backgroundColor="primary" fxHide.sm="true" fxHide.xs="true" *ngIf="isLoggedIn$">
+      <a mat-tab-link *ngFor="let link of routeLinks" [routerLink]="link.link" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive"
+        backgroundColor="primary">
+        {{link.label}}
+      </a>
+      <a mat-tab-link [routerLink]="['/user', userObj.UserId]" backgroundColor="primary" routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">Dashboard</a>
+    </nav>
+    <div fxFlex></div>
+    <div *ngIf="isLoggedIn$">
+      <img mat-button [matMenuTriggerFor]="userMenu" class="header-user-image" src="{{hostLink}}{{userObj.UserImagePath}}">
+      <mat-menu #userMenu="matMenu">
+        <button (click)="logout()" mat-menu-item>Logout</button>
+      </mat-menu>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+

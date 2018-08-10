@@ -1,0 +1,12 @@
+.header-user-image {
+  margin-top: 5px;
+  height: 42px;
+  width: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.company-logo {
+  height: 50px;
+  width: 100px;
+}

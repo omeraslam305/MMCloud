@@ -1,0 +1,16 @@
+agm-map {
+  height: 400px;
+}
+
+.agent-info-image {
+  height: 100px;
+  width: 100px;
+}
+
+.agent-info-name {
+  font-size: larger;
+}
+
+mat-form-field {
+  width: 100%;
+}
