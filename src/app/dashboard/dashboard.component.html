@@ -9,6 +9,64 @@
           <div fxLayout="column" fxLayoutAlign="space-between end" >
               <button mat-raised-button fxLayoutAlign="end" type="button" color="primary">Add New</button>
           </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" >
+              <form [formGroup]="searchRecordForm" (ngSubmit)="search()">
+                  <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+                      <mat-form-field fxFlex class="right-pad">
+                        <mat-select formControlName="MediaType" id="MediaType" fxFlex placeholder="Media Type" (change)="onMediaTypeChange($event.value)">
+                          <mat-option value="1">
+                            TV
+                          </mat-option>
+                          <mat-option value="2">
+                            Radio
+                          </mat-option>
+                          <mat-option value="3">
+                              Print
+                            </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <span fxFlex="5"></span>              
+                      <mat-form-field fxFlex class="right-pad">
+                        <mat-select formControlName="NewsType" id="NewsType" fxFlex placeholder="News Type">
+                          <mat-option>--</mat-option>
+                          <mat-option *ngFor="let newsType of newsTypeArray" [value]="newsType">
+                            {{newsType.value}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <span fxFlex="5"></span>
+                      <mat-form-field fxFlex class="right-pad">
+                        <mat-select formControlName="ChannelType" id="ChannelType" fxFlex placeholder="Channel Type">
+                          <mat-option>--</mat-option>
+                          <mat-option *ngFor="let channel of channelArray" [value]="channel">
+                            {{channel.value}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field fxFlex class="right-pad">
+                          <mat-select formControlName="Sentiment" id="Sentiment" fxFlex placeholder="Sentiment">
+                            <mat-option value="1">
+                              Positive
+                            </mat-option>
+                            <mat-option value="2">
+                              Negative
+                            </mat-option>
+                            <mat-option value="3">
+                                Neutral
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      <span fxFlex="5"></span>              
+                      <mat-form-field fxFlex class="right-pad">
+                        <input matInput placeholder="Script" formControlName="Script" id="Script" type="text" class="form-control">
+                      </mat-form-field>
+                      <mat-form-field fxFlex class="right-pad">
+                          <input matInput placeholder="Date" formControlName="Date" id="Date" type="text" class="form-control">
+                      </mat-form-field>
+                      <button mat-button mat-raised-button  type="submit" color="primary">Search</button>
+                    </div>
+              </form>
+          </div>
           <div fxLayout="column" fxLayoutAlign="space-between stretch" >
               <mat-table #table [dataSource]="dataSource" matSort>
                   <ng-container matColumnDef="{{column.id}}" *ngFor="let column of columnNames">
