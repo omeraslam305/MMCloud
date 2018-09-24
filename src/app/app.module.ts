@@ -36,6 +36,7 @@ import { AmazingTimePickerModule } from 'amazing-time-picker';
     DashboardComponent,
     AddMediaNewsComponent,
     MediaReportsComponent
+    
   ],
   entryComponents: [
     SnakbarComponent
