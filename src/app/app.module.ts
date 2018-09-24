@@ -19,6 +19,9 @@ import { AuthGuard } from './services/auth.guard';
 import { HelperService } from './services/helper.service';
 import { SnakbarComponent } from './snakbar/snakbar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AddMediaNewsComponent } from './add-media-news/add-media-news.component';
+import { MediaReportsComponent } from './media-reports/media-reports.component';
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 
 
 @NgModule({
@@ -30,7 +33,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     PropertyDetailsComponent,
     PageNotFoundComponent,
     SnakbarComponent,
-    DashboardComponent
+    DashboardComponent,
+    AddMediaNewsComponent,
+    MediaReportsComponent
   ],
   entryComponents: [
     SnakbarComponent
@@ -45,6 +50,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     ReactiveFormsModule,
     HttpModule,
     MatTableModule,
+    AmazingTimePickerModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAEvOtY0iktyx73GGVSzr3c_O06G05dzIc'
     })

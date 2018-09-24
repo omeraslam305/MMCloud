@@ -1,16 +1,13 @@
 <mat-card>
   <mat-card-header>
     <div>
-      <h1>Dashboard</h1>
+      <h1>Add Media News</h1>
     </div>
   </mat-card-header>
   <mat-card-content>
-    <div fxLayout="column" fxLayoutAlign="space-between ">
-          <div fxLayout="column" fxLayoutAlign="space-between end" >
-              <button mat-raised-button fxLayoutAlign="end" type="button" color="primary" (click)="addNew()">Add New</button>
-          </div>
+    <div fxLayout="column" fxLayoutAlign="space-between">
           <div fxLayout="column" fxLayoutAlign="space-between start" >
-              <form [formGroup]="searchRecordForm" (ngSubmit)="search()">
+              <form [formGroup]="addNewsForm" (ngSubmit)="submitForm()">
                   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
                       <mat-form-field fxFlex class="right-pad">
                         <mat-select formControlName="MediaType" id="MediaType" fxFlex placeholder="Media Type" (change)="onMediaTypeChange($event.value)">
@@ -44,6 +41,20 @@
                         </mat-select>
                       </mat-form-field>
                       <mat-form-field fxFlex class="right-pad">
+                        <!-- <input matInput placeholder="Date" formControlName="Date" id="Date" type="text" class="form-control"> -->
+                        <input matInput [matDatepicker]="picker" placeholder="Choose a Date" formControlName="Date" id="Date">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field fxFlex class="right-pad">
+                      <!-- <input matInput placeholder="Time" formControlName="Time" id="Time" type="text" class="form-control"> -->
+                      <!-- <input matInput [matTimepicker]="picker1" placeholder="Choose a time" formControlName="Time" id="Time">
+                      <mat-timepicker-toggle matSuffix [for]="picker1"></mat-timepicker-toggle>
+                      <mat-timepicker #picker1 color="primary"></mat-timepicker> -->
+                      <input matInput type="time" placeholder="Choose a Time" atp-time-picker value="20:55" formControlName="Time" id="Time"/>
+                      
+                    </mat-form-field>
+                      <mat-form-field fxFlex class="right-pad">
                           <mat-select formControlName="Sentiment" id="Sentiment" fxFlex placeholder="Sentiment">
                             <mat-option value="1">
                               Positive
@@ -58,24 +69,14 @@
                         </mat-form-field>
                       <span fxFlex="5"></span>              
                       <mat-form-field fxFlex class="right-pad">
-                        <input matInput placeholder="Script" formControlName="Script" id="Script" type="text" class="form-control">
+                        <input matInput placeholder="Subject" formControlName="Subject" id="Subject" type="text" class="form-control">
                       </mat-form-field>
                       <mat-form-field fxFlex class="right-pad">
-                          <input matInput placeholder="Date" formControlName="Date" id="Date" type="text" class="form-control">
-                      </mat-form-field>
-                      <button mat-button mat-raised-button  type="submit" color="primary">Search</button>
+                        <input matInput placeholder="Script" formControlName="Script" id="Script" type="text" class="form-control">
+                      </mat-form-field>                      
+                      <button mat-button mat-raised-button  type="submit" color="primary">Save</button>
                     </div>
               </form>
-          </div>
-          <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-              <mat-table #table [dataSource]="dataSource" matSort>
-                  <ng-container matColumnDef="{{column.id}}" *ngFor="let column of columnNames">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{column.value}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element[column.id]}} </mat-cell>
-                  </ng-container>        
-                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table>
           </div>
     </div>      
   </mat-card-content>

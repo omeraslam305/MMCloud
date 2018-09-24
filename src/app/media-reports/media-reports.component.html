@@ -1,14 +1,11 @@
 <mat-card>
   <mat-card-header>
     <div>
-      <h1>Dashboard</h1>
+      <h1>Media Reports</h1>
     </div>
   </mat-card-header>
   <mat-card-content>
     <div fxLayout="column" fxLayoutAlign="space-between ">
-          <div fxLayout="column" fxLayoutAlign="space-between end" >
-              <button mat-raised-button fxLayoutAlign="end" type="button" color="primary" (click)="addNew()">Add New</button>
-          </div>
           <div fxLayout="column" fxLayoutAlign="space-between start" >
               <form [formGroup]="searchRecordForm" (ngSubmit)="search()">
                   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
@@ -68,14 +65,7 @@
               </form>
           </div>
           <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-              <mat-table #table [dataSource]="dataSource" matSort>
-                  <ng-container matColumnDef="{{column.id}}" *ngFor="let column of columnNames">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{column.value}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element[column.id]}} </mat-cell>
-                  </ng-container>        
-                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table>
+              
           </div>
     </div>      
   </mat-card-content>

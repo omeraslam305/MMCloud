@@ -47,16 +47,12 @@ export class HeaderComponent implements OnInit {
 
     this.routeLinks = [
       {
-        label: 'Home',
-        link: './home'
+        label: 'Dashboard',
+        link: './dashboard'
       },
       {
-        label: 'About Us',
-        link: './aboutus'
-      },
-      {
-        label: 'Contact Us',
-        link: './contact'
+        label: 'Reports',
+        link: './mediareports'
       }
     ];
 

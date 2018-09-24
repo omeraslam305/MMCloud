@@ -20,11 +20,11 @@ export interface DropDownVal {
 }
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-media-reports',
+  templateUrl: './media-reports.component.html',
+  styleUrls: ['./media-reports.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class MediaReportsComponent implements OnInit {
   dataSource;
       displayedColumns = [];
       @ViewChild(MatSort) sort: MatSort;
