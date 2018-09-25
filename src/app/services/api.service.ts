@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/catch';
@@ -9,14 +10,14 @@ import { User } from './user';
 
 @Injectable()
 export class ApiService {
-  END_POINT = 'http://localhost:3000/';
+  END_POINT = 'https://6h8ekj594f.execute-api.us-east-2.amazonaws.com/';
   private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   get isLoggedIn() {
     return this.loggedIn.asObservable();
   }
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private httpClient: HttpClient) { }
 
   login(user: User) {
     if (user.userName !== '' && user.password !== '' ) {
@@ -263,5 +264,40 @@ export class ApiService {
       });
   };
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  getMediaNews(searchData) {
+    debugger;
+    console.log(searchData);
+    //var data = {mediaTypeId : 1};
+    let mediaTypeId = { mediaTypeId : 1  };
+    let INFO =  Object.assign(mediaTypeId);
+    let body = JSON.stringify(INFO);
+    const data = {};
+    var headerData = new Headers();
+    headerData.append('Content-Type', 'application/x-www-form-urlencoded');
+    //headerData.append('Data-Type', 'json');
+    return this.http.post(this.END_POINT + 'prod', searchData, { headers: headerData })
+      .map((response) => response.json())
+      .catch((error: Response) => {
+        if (error.status === 404) {
+          return Observable.throw(error);
+        }
+        return Observable.throw(error);
+      });
+
+      
+      // return this.httpClient.post(this.END_POINT + 'prod', JSON.stringify({mediaTypeId: "1"}), {
+      //     headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
+      //   }).map((response: Response) => {
+      //     // login successful if there's a jwt token in the response
+      //     console.log(response.json());
+      //   }).catch((error: Response) => {
+      //     if (error.status === 404) {
+      //       return Observable.throw(error);
+      //     }
+      //     return Observable.throw(error);
+      //   });
+  }
 
 }

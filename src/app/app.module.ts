@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRoutingModule } from './app-routes/routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 import { MatTableModule } from '@angular/material';
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AddMediaNewsComponent } from './add-media-news/add-media-news.component';
 import { MediaReportsComponent } from './media-reports/media-reports.component';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 
 @NgModule({
@@ -50,8 +52,10 @@ import { AmazingTimePickerModule } from 'amazing-time-picker';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    HttpClientModule,
     MatTableModule,
     AmazingTimePickerModule,
+    NgxDaterangepickerMd,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAEvOtY0iktyx73GGVSzr3c_O06G05dzIc'
     })

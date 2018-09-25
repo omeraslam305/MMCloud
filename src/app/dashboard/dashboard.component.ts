@@ -4,6 +4,8 @@ import { DataSource } from '@angular/cdk/table';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debug } from 'util';
+import * as moment from 'moment';
+import { ApiService } from '../services/api.service';
 
 export interface MediaNews {
   id: number;
@@ -27,7 +29,13 @@ export interface DropDownVal {
 export class DashboardComponent implements OnInit {
   dataSource;
       displayedColumns = [];
+      // selected: {startdDate: Moment.is, endDate: Moment};
       @ViewChild(MatSort) sort: MatSort;
+
+      selected: any;
+      alwaysShowCalendars: boolean;
+      showRangeLabelOnInput: boolean;
+      keepCalendarOpeningWithRange: boolean;  
 
       columnNames = [{
         id: "id",
@@ -196,7 +204,12 @@ export class DashboardComponent implements OnInit {
         mediaTypeId: "3"
       }];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private apiService: ApiService) { 
+    this.alwaysShowCalendars = true;
+    this.keepCalendarOpeningWithRange = true;
+    this.showRangeLabelOnInput = true;
+    this.selected = {startDate: moment().subtract(1, 'days'), endDate: moment().subtract(1, 'days')};
+  }
 
   newsTypeArray: DropDownVal[] = [];
   channelArray: DropDownVal[] = [];
@@ -204,6 +217,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.displayedColumns = this.columnNames.map(x => x.id);
     this.createTable();
+
+    
   }
 
   searchRecordForm = new FormGroup({
@@ -244,10 +259,43 @@ export class DashboardComponent implements OnInit {
     });
 
     console.log(this.newsTypeArray);   
-}
+  }
 
   addNew(){
     this.router.navigate(['addmedianews']);
   }
 
+  search(){
+    
+    // let formData = {
+    //     mediaTypeId: "",//this.searchRecordForm.controls['MediaType'].value,
+    //     newsTypeId: "",//this.searchRecordForm.get('NewsType').value.key,
+    //     channelId: "",//this.searchRecordForm.get('ChannelType').value.key,
+    //     sentimentId: "",//this.searchRecordForm.get('Sentiment').value,
+    //     fromDate: "",
+    //     toDate: ""
+    // }
+
+    let formData = {
+      mediaTypeId: "1",
+      newsTypeId: "",
+      channelId: "",
+      sentimentId: "",
+      fromDate: "",
+      toDate: ""
+  }
+    console.log(formData);
+
+    this.apiService.getMediaNews(formData)
+      .subscribe(response => {
+        console.log(response);
+      },
+        (error: Response) => {
+          if (error.status === 400) {
+            console.log('Bad request')
+          } else {
+            console.log(error);
+          }
+        })
+  }
 }
