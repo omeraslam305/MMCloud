@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { debug } from 'util';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ApiService } from '../services/api.service';
@@ -20,6 +20,10 @@ export interface DropDownVal {
 export class AddMediaNewsComponent implements OnInit {
 
   private config = { hour: 7, minute: 15, meriden: 'PM', format: 12 };
+  public selectedNewsType;
+  public selectedChannelType;
+
+  disableBtn : Boolean = false;
 
   newsType = [{
     id: "1",
@@ -162,13 +166,32 @@ export class AddMediaNewsComponent implements OnInit {
     mediaTypeId: "3"
   }];
 
-constructor(private router: Router,private atp: AmazingTimePickerService,private apiService: ApiService) { }
+  recordId : number;
 
-newsTypeArray: DropDownVal[] = [];
-channelArray: DropDownVal[] = [];
+constructor(private router: Router,private atp: AmazingTimePickerService,private apiService: ApiService, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.recordId = params['id'] != null ? parseInt(params['id']) : 0;
+      if(this.recordId > 0){
+        var recordDetail = JSON.parse(localStorage["mediarecords"]);
+        this.addNewsForm.controls['MediaType'].setValue(recordDetail.MediaTypeId);
+        this.onMediaTypeChange(recordDetail.MediaTypeId,true);
+        this.addNewsForm.controls['Sentiment'].setValue(recordDetail.SentimentId);
+        this.addNewsForm.controls['Subject'].setValue(recordDetail.Subject);
+        this.addNewsForm.controls['Script'].setValue(recordDetail.Script);
+        this.addNewsForm.controls['Date'].setValue(recordDetail.NewsDate);
+        this.addNewsForm.controls['Time'].setValue(recordDetail.NewsTime);
+        this.disableBtn = true;
+      }
+    });
+ }
+
+newsTypeArray = [];
+channelArray = [];
 
   ngOnInit() {
+    
   }
+  
 
   addNewsForm = new FormGroup({
     MediaType: new FormControl(),
@@ -181,7 +204,7 @@ channelArray: DropDownVal[] = [];
     Time: new FormControl(),
   });
 
-  onMediaTypeChange(mediaTypeId) {
+  onMediaTypeChange(mediaTypeId, setOptions) {
     console.log(mediaTypeId);
     this.newsTypeArray = [];
     this.channelArray = [];
@@ -189,13 +212,24 @@ channelArray: DropDownVal[] = [];
 
     var newsOptions = this.newsType.filter(function(el){ return el.mediaTypeId == mediaTypeId;});   
     newsOptions.forEach(function(el){
-      that.newsTypeArray.push({key: el.id, value: el.newsTypeName});
+      //that.newsTypeArray.push({key: el.id, value: el.newsTypeName});
+      that.newsTypeArray.push(el);
     });
 
     var channelOptions = this.channels.filter(function(el){ return el.mediaTypeId == mediaTypeId;});   
     channelOptions.forEach(function(el){
-      that.channelArray.push({key: el.id, value: el.channelName});
+      // that.channelArray.push({key: el.id, value: el.channelName});
+      that.channelArray.push(el);
     });
+
+    if(setOptions){
+      var recordDetail = JSON.parse(localStorage["mediarecords"]);
+      const toSelect = this.newsTypeArray.find(c => c.id == recordDetail.NewsTypeId);
+      this.addNewsForm.get('NewsType').setValue(toSelect);
+
+      const toSelectChannel = this.channelArray.find(c => c.id == recordDetail.ChannelId);
+      this.addNewsForm.get('ChannelType').setValue(toSelectChannel);
+    }
 
     console.log(this.newsTypeArray);   
 }
@@ -204,8 +238,8 @@ submitForm(){
   debugger;
   let formData = {
       mediaTypeId: this.addNewsForm.controls['MediaType'].value,
-      newsTypeId: this.addNewsForm.get('NewsType').value != null ? this.addNewsForm.get('NewsType').value.key : "",
-      channelId: this.addNewsForm.get('ChannelType').value ? this.addNewsForm.get('ChannelType').value.key : "",
+      newsTypeId: this.addNewsForm.get('NewsType').value != null ? this.addNewsForm.get('NewsType').value.id : "",
+      channelId: this.addNewsForm.get('ChannelType').value ? this.addNewsForm.get('ChannelType').value.id : "",
       sentimentId: this.addNewsForm.get('Sentiment').value,
       subject: this.addNewsForm.get('Subject').value,
       script: this.addNewsForm.get('Script').value,
@@ -233,9 +267,7 @@ submitForm(){
           } else {
             console.log(error);
           }
-        })
-
-  
+        }) 
   
 }
 

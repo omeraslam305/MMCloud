@@ -53,10 +53,7 @@
                             </mat-option>
                           </mat-select>
                         </mat-form-field>
-                      <span fxFlex="5"></span>              
-                      <mat-form-field fxFlex class="right-pad">
-                        <input matInput placeholder="Script" formControlName="Script" id="Script" type="text" class="form-control">
-                      </mat-form-field>
+                      <span fxFlex="5"></span> 
                       <mat-form-field fxFlex class="right-pad">
                           <input type="text" matInput formControlName="Date" id="Date"
                           ngxDaterangepickerMd
@@ -65,14 +62,20 @@
                           [linkedCalendars]="true"
                           [keepCalendarOpeningWithRange]="keepCalendarOpeningWithRange"
                           [showRangeLabelOnInput]="showRangeLabelOnInput"
-                          placeholder="Select please..."/>
+                          placeholder="From-To Date"/>
                       </mat-form-field>
-                      <button mat-button mat-raised-button  type="submit" color="primary">Search</button>
+                      <button mat-button mat-raised-button  type="submit" color="primary">Filter</button>
                     </div>
               </form>
           </div>
-          <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-              
+          <div fxLayout="column" fxLayoutAlign="space-between stretch" style="margin-top: 50px;text-align: -webkit-center;" >
+              <div [chart]="mediaTypeChart"></div>              
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between stretch" style="margin-top: 50px;text-align: -webkit-center;" >
+              <div [chart]="newsTypeChart"></div>              
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between stretch" style="margin-top: 50px;text-align: -webkit-center;" >
+              <div [chart]="sentimentChart"></div>              
           </div>
     </div>      
   </mat-card-content>

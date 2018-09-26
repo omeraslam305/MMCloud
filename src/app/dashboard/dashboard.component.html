@@ -66,7 +66,7 @@
                           [linkedCalendars]="true"
                           [keepCalendarOpeningWithRange]="keepCalendarOpeningWithRange"
                           [showRangeLabelOnInput]="showRangeLabelOnInput"
-                          placeholder="Select please..."/>
+                          placeholder="From-To Date"/>
                       </mat-form-field>
                       <button mat-button mat-raised-button  type="submit" color="primary">Search</button>
                     </div>
@@ -85,7 +85,7 @@
                 <mat-table #table [dataSource]="dataSource" matSort>
                     <ng-container matColumnDef="id">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
-                      <mat-cell *matCellDef="let element"><a href="/addmedianews?id={{element['id']}}">{{element["id"]}}</a>  </mat-cell>
+                      <mat-cell *matCellDef="let element"><a href="/addmedianews?id={{element['id']}}" (click)="getData(element['id'])">{{element["id"]}}</a>  </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="mediatype">
                         <mat-header-cell *matHeaderCellDef mat-sort-header> Media Type </mat-header-cell>

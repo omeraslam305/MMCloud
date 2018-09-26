@@ -10,7 +10,7 @@
               <form [formGroup]="addNewsForm" (ngSubmit)="submitForm()">
                   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
                       <mat-form-field fxFlex class="right-pad">
-                        <mat-select formControlName="MediaType" id="MediaType" fxFlex placeholder="Media Type" (change)="onMediaTypeChange($event.value)">
+                        <mat-select formControlName="MediaType" id="MediaType" fxFlex placeholder="Media Type" (change)="onMediaTypeChange($event.value,false)">
                           <mat-option value="1">
                             TV
                           </mat-option>
@@ -27,7 +27,7 @@
                         <mat-select formControlName="NewsType" id="NewsType" fxFlex placeholder="News Type">
                           <mat-option>--</mat-option>
                           <mat-option *ngFor="let newsType of newsTypeArray" [value]="newsType">
-                            {{newsType.value}}
+                            {{newsType.newsTypeName}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
@@ -36,21 +36,16 @@
                         <mat-select formControlName="ChannelType" id="ChannelType" fxFlex placeholder="Channel Type">
                           <mat-option>--</mat-option>
                           <mat-option *ngFor="let channel of channelArray" [value]="channel">
-                            {{channel.value}}
+                            {{channel.channelName}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
                       <mat-form-field fxFlex class="right-pad">
-                        <!-- <input matInput placeholder="Date" formControlName="Date" id="Date" type="text" class="form-control"> -->
                         <input matInput [matDatepicker]="picker" placeholder="Choose a Date" formControlName="Date" id="Date">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field fxFlex class="right-pad">
-                      <!-- <input matInput placeholder="Time" formControlName="Time" id="Time" type="text" class="form-control"> -->
-                      <!-- <input matInput [matTimepicker]="picker1" placeholder="Choose a time" formControlName="Time" id="Time">
-                      <mat-timepicker-toggle matSuffix [for]="picker1"></mat-timepicker-toggle>
-                      <mat-timepicker #picker1 color="primary"></mat-timepicker> -->
                       <input matInput type="time" placeholder="Choose a Time" atp-time-picker value="20:55" formControlName="Time" id="Time"/>
                       
                     </mat-form-field>
@@ -74,7 +69,7 @@
                       <mat-form-field fxFlex class="right-pad">
                         <input matInput placeholder="Script" formControlName="Script" id="Script" type="text" class="form-control">
                       </mat-form-field>                      
-                      <button mat-button mat-raised-button  type="submit" color="primary">Save</button>
+                      <button mat-button mat-raised-button  type="submit" color="primary" [disabled]="disableBtn">Save</button>
                     </div>
               </form>
           </div>

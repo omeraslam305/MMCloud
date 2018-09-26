@@ -24,6 +24,7 @@ import { AddMediaNewsComponent } from './add-media-news/add-media-news.component
 import { MediaReportsComponent } from './media-reports/media-reports.component';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
+import { ChartModule } from 'angular-highcharts';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
     MatPaginatorModule,
     AmazingTimePickerModule,
     NgxDaterangepickerMd,
+    ChartModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAEvOtY0iktyx73GGVSzr3c_O06G05dzIc'
     })

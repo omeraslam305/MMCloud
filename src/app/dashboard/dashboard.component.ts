@@ -28,6 +28,7 @@ export interface DropDownVal {
 })
 export class DashboardComponent implements OnInit {
   dataSource;
+  mediaRecords = [];
       displayedColumns = [];
       // selected: {startdDate: Moment.is, endDate: Moment};
       @ViewChild(MatSort) sort: MatSort;
@@ -209,7 +210,7 @@ export class DashboardComponent implements OnInit {
     this.alwaysShowCalendars = true;
     this.keepCalendarOpeningWithRange = true;
     this.showRangeLabelOnInput = true;
-    this.selected = {startDate: moment().subtract(1, 'days'), endDate: moment().subtract(1, 'days')};
+    this.selected = {startDate: moment().subtract(2, 'year'), endDate: moment()};
   }
 
   newsTypeArray: DropDownVal[] = [];
@@ -307,7 +308,8 @@ export class DashboardComponent implements OnInit {
     this.apiService.postData('https://osnorfg4k6.execute-api.us-east-2.amazonaws.com/prod',searchParams)
       .subscribe(response => {
         console.log(response);
-        if(response.success){
+        if(response.success){     
+          this.mediaRecords = response.data;     
           this.renderMediaRecords(response.data);
         } else {
           alert("Records fetching failed");
@@ -320,5 +322,13 @@ export class DashboardComponent implements OnInit {
             console.log(error);
           }
         })
+  }
+
+  getData(id){
+    var recordDetail = this.mediaRecords.filter(function(i){
+      return i.Id == id;
+    })[0];
+    localStorage["mediarecords"] = JSON.stringify(recordDetail);
+    return true;
   }
 }

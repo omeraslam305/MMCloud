@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
-import { DataSource } from '@angular/cdk/table';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
-import { debug } from 'util';
-import * as moment from 'moment';
 import { ApiService } from '../services/api.service';
+import { Chart } from 'angular-highcharts';
+import * as moment from 'moment';
 
 export interface MediaNews {
   id: number;
@@ -27,10 +25,9 @@ export interface DropDownVal {
   styleUrls: ['./media-reports.component.css']
 })
 export class MediaReportsComponent implements OnInit {
+  mediaTypeChart; newsTypeChart; sentimentChart;
   dataSource;
       displayedColumns = [];
-      @ViewChild(MatSort) sort: MatSort;
-
       selected: any;
       alwaysShowCalendars: boolean;
       showRangeLabelOnInput: boolean;
@@ -183,7 +180,11 @@ export class MediaReportsComponent implements OnInit {
   channelArray: DropDownVal[] = [];
 
   ngOnInit() {
-    
+    this.alwaysShowCalendars = true;
+    this.keepCalendarOpeningWithRange = true;
+    this.showRangeLabelOnInput = true;
+    this.selected = {startDate: moment().subtract(2, 'year'), endDate: moment()};
+    this.search();
   }
 
   searchRecordForm = new FormGroup({
@@ -191,7 +192,6 @@ export class MediaReportsComponent implements OnInit {
     NewsType: new FormControl(),
     ChannelType: new FormControl(),
     Sentiment : new FormControl(),
-    Script : new FormControl(),
     Date: new FormControl(),
   });
   
@@ -216,7 +216,6 @@ export class MediaReportsComponent implements OnInit {
 }
 
 search(){
-  debugger;
   let searchParams = {
       mediaTypeId: this.searchRecordForm.controls['MediaType'].value,
       newsTypeId: this.searchRecordForm.get('NewsType').value != null ? this.searchRecordForm.get('NewsType').value.key : "",
@@ -225,12 +224,208 @@ search(){
       fromDate: this.selected != null ? this.selected.startDate.month() + 1 + "/" + this.selected.startDate.date() + "/" + this.selected.startDate.year().toString().substr(-2) : "",
       toDate: this.selected != null ? this.selected.endDate.month() + 1 + "/" + this.selected.endDate.date() + "/" + this.selected.endDate.year().toString().substr(-2)  : ""
   }
+
+  // if(defaultCall){
+  //   var dt = new Date();
+  //   searchParams.fromDate = "1/1/17";
+  //   searchParams.toDate = dt.getMonth() + "/" + dt.getDate() + "/" + dt.getFullYear().toString().substr(-2);
+  // }
   
   console.log(searchParams);
   this.apiService.postData('https://6h8ekj594f.execute-api.us-east-2.amazonaws.com/prod',searchParams)
     .subscribe(response => {
       console.log(response);
       if(response.success){
+        var that = this;
+        var mediaData = [];
+        mediaData.push({y: response.data.MediaType.TV, color: this.getColor()});
+        mediaData.push({y: response.data.MediaType.Radio, color: this.getColor()});
+        mediaData.push({y: response.data.MediaType.Print, color: this.getColor()});
+
+        var sentimentData = [];
+        sentimentData.push({y: response.data.SentimentType.Positive, color: this.getColor()});
+        sentimentData.push({y: response.data.SentimentType.Neutral, color: this.getColor()});
+        sentimentData.push({y: response.data.SentimentType.Negative, color: this.getColor()});
+
+        var newsTypeData = [];
+        var newsTypeCategory = [];
+
+        response.data.NewsType.forEach(function(i){
+          newsTypeData.push({y: i.count, color: that.getColor()})
+        });
+
+        response.data.NewsType.forEach(function(i){
+          newsTypeCategory.push(i.newsType)
+        });
+
+        this.mediaTypeChart = new Chart({
+          chart: {
+            type: 'column',
+            width: 900
+          },
+          title: {
+            text: 'By Media Type'
+          },
+          subtitle: {
+            text: 'On the basis of media records'
+          },
+          xAxis: {
+            type: 'category',
+            categories: [
+                'TV',
+                'Radio',
+                'Print'
+            ],
+            crosshair: true,
+            labels: {
+              rotation: -45,
+              style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+              }
+          }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+                text: 'No. of records'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+          plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+          },
+          credits: {
+            enabled: false
+          },
+          series: [
+            {
+              name: 'Total',
+              data: mediaData
+            }
+          ]
+        });
+
+        this.newsTypeChart = new Chart({
+          chart: {
+            type: 'column',
+            width: 900
+          },
+          title: {
+            text: 'By News Type'
+          },
+          subtitle: {
+            text: 'On the basis of media records'
+          },
+          xAxis: {
+            categories: newsTypeCategory,
+            crosshair: true,
+            labels: {
+              rotation: -45,
+              style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+              }
+          }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+                text: 'No. of records'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+          plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+          },
+          credits: {
+            enabled: false
+          },
+          series: [
+            {
+              name: 'Total',
+              data: newsTypeData
+            }
+          ]
+        });
+
+        this.sentimentChart = new Chart({
+          chart: {
+            type: 'column',
+            width: 900
+          },
+          title: {
+            text: 'By Sentiment Type'
+          },
+          subtitle: {
+            text: 'On the basis of media records'
+          },
+          xAxis: {
+            categories: [
+                'Positive',
+                'Neutral',
+                'Negative'
+            ],
+            crosshair: true,
+            labels: {
+              rotation: -45,
+              style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+              }
+          }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+                text: 'No. of records'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+          plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+          },
+          credits: {
+            enabled: false
+          },
+          series: [
+            {
+              name: 'Total',
+              data: sentimentData
+            }
+          ]
+        });
+
         console.log(response.data);
       } else {
         alert("Records fetching failed");
@@ -244,5 +439,14 @@ search(){
         }
       })
 }
+
+  getColor() {
+    return (
+      "#" +
+      Math.random()
+        .toString(16)
+        .slice(2, 8)
+    );
+  }
 
 }
