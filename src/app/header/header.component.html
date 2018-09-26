@@ -14,7 +14,7 @@
     </nav>
     <div fxFlex></div>
     <div *ngIf="isLoggedIn$">
-      <img mat-button [matMenuTriggerFor]="userMenu" class="header-user-image" src="{{hostLink}}{{userObj.UserImagePath}}">
+      <img mat-button [matMenuTriggerFor]="userMenu" class="header-user-image" src="../../assets/menu.png">
       <mat-menu #userMenu="matMenu">
         <button (click)="logout()" mat-menu-item>Logout</button>
       </mat-menu>

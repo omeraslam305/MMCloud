@@ -58,7 +58,14 @@
                         <input matInput placeholder="Script" formControlName="Script" id="Script" type="text" class="form-control">
                       </mat-form-field>
                       <mat-form-field fxFlex class="right-pad">
-                          <input matInput placeholder="Date" formControlName="Date" id="Date" type="text" class="form-control">
+                          <input type="text" matInput formControlName="Date" id="Date"
+                          ngxDaterangepickerMd
+                          [(ngModel)]="selected"
+                          [alwaysShowCalendars]="alwaysShowCalendars"
+                          [linkedCalendars]="true"
+                          [keepCalendarOpeningWithRange]="keepCalendarOpeningWithRange"
+                          [showRangeLabelOnInput]="showRangeLabelOnInput"
+                          placeholder="Select please..."/>
                       </mat-form-field>
                       <button mat-button mat-raised-button  type="submit" color="primary">Search</button>
                     </div>

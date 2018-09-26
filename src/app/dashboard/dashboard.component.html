@@ -73,14 +73,44 @@
               </form>
           </div>
           <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-              <mat-table #table [dataSource]="dataSource" matSort>
+              <!-- <mat-table #table [dataSource]="dataSource" matSort>
                   <ng-container matColumnDef="{{column.id}}" *ngFor="let column of columnNames">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> {{column.value}} </mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element[column.id]}} </mat-cell>
                   </ng-container>        
                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table>
+                </mat-table> -->
+
+                <mat-table #table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="id">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
+                      <mat-cell *matCellDef="let element"><a href="/addmedianews?id={{element['id']}}">{{element["id"]}}</a>  </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="mediatype">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Media Type </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element["mediatype"]}} </mat-cell>
+                      </ng-container>  
+                      <ng-container matColumnDef="newstype">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header> News Type </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> {{element["newstype"]}} </mat-cell>
+                        </ng-container>  
+                        <ng-container matColumnDef="channeltype">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Channel Type </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element["channeltype"]}} </mat-cell>
+                          </ng-container>
+                          <ng-container matColumnDef="sentiment">
+                              <mat-header-cell *matHeaderCellDef mat-sort-header> Sentiment </mat-header-cell>
+                              <mat-cell *matCellDef="let element"> {{element["sentiment"]}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="dt">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Date </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element["dt"]}} </mat-cell>
+                              </ng-container>        
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </mat-table>
+                  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
           </div>
     </div>      
   </mat-card-content>

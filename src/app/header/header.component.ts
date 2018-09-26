@@ -17,7 +17,6 @@ export class HeaderComponent implements OnInit {
   activeLink = '';
   userObj: any;
   userType: any;
-  hostLink: any;
   isLoggedIn$: boolean = false;
   
 
@@ -35,13 +34,12 @@ export class HeaderComponent implements OnInit {
       console.log("setting nav links");
       this.helper.userObj = JSON.parse(localStorage.getItem('userObj'));
       this.userType = this.helper.userObj.userType;
-      this.hostLink = this.apiService.END_POINT;
       this.userObj = this.helper.userObj;
            
     }
 
     this.apiService.isLoggedIn.subscribe((val) => {
-      this.isLoggedIn$ = val;
+      this.isLoggedIn$ = val || localStorage["userObj"] != null;
     }, (err) => {});
     console.log("In header Login value : " + this.isLoggedIn$); 
 
@@ -63,44 +61,6 @@ export class HeaderComponent implements OnInit {
     })
     console.log('link =', this.activeLink);
   }
-
-  // Function for opening the login dialog
-
-  // openLoginDialog() {
-  //   this.dialog.open(LoginComponent, {
-  //     height: '45%',
-  //     width: '30%',
-  //     data: { name: this.name, animal: this.animal }
-  //   })
-  //     .afterClosed()
-  //     .subscribe(response => {
-
-  //       if (response.success) {
-
-  //         localStorage.setItem('userObj', JSON.stringify(response.data));
-  //         this.helper.userObj = JSON.parse(localStorage.getItem('userObj'));
-  //         this.userObj = this.helper.userObj;
-  //         this.userType = this.helper.userObj.UserTypeId;
-  //         this.hostLink = this.apiService.END_POINT;
-  //         console.log('after login =', this.userObj);
-  //         this.router.navigate(['home']);
-  //       }
-  //     });
-  // }
-
-  // // Function for opening signup dialog
-
-  // openSingUpDialog() {
-  //   this.dialog.open(SignupComponent, {
-  //     height: '85%',
-  //     width: '50%',
-  //     data: { name: this.name, animal: this.animal }
-  //   })
-  //     .afterClosed()
-  //     .subscribe(result => {
-  //       console.log('Dialog result =', result);
-  //     });
-  // }
 
   logout() {
     localStorage.removeItem('userObj');

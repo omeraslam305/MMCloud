@@ -4,6 +4,8 @@ import { DataSource } from '@angular/cdk/table';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debug } from 'util';
+import * as moment from 'moment';
+import { ApiService } from '../services/api.service';
 
 export interface MediaNews {
   id: number;
@@ -29,31 +31,10 @@ export class MediaReportsComponent implements OnInit {
       displayedColumns = [];
       @ViewChild(MatSort) sort: MatSort;
 
-      columnNames = [{
-        id: "id",
-        value: "Id."
-
-      }, {
-        id: "mediatype",
-        value: "Media Type"
-      },
-      {
-        id: "newstype",
-        value: "News Type"
-      },
-      {
-        id: "channeltype",
-        value: "Channel Type"
-      },
-      {
-        id: "sentiment",
-        value: "Sentiment"
-      },
-      {
-        id: "dt",
-        value: "News Date & Time"
-      }
-    ];
+      selected: any;
+      alwaysShowCalendars: boolean;
+      showRangeLabelOnInput: boolean;
+      keepCalendarOpeningWithRange: boolean; 
 
       newsType = [{
         id: "1",
@@ -196,14 +177,13 @@ export class MediaReportsComponent implements OnInit {
         mediaTypeId: "3"
       }];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private apiService: ApiService) { }
 
   newsTypeArray: DropDownVal[] = [];
   channelArray: DropDownVal[] = [];
 
   ngOnInit() {
-    this.displayedColumns = this.columnNames.map(x => x.id);
-    this.createTable();
+    
   }
 
   searchRecordForm = new FormGroup({
@@ -214,18 +194,7 @@ export class MediaReportsComponent implements OnInit {
     Script : new FormControl(),
     Date: new FormControl(),
   });
-
-  createTable() {
-    let tableArr: MediaNews[] = [{ id: 1, mediatype: 'TV', newstype: 'Tickers/Announcement', channeltype: 'Bayerischer Rundfunk', sentiment: 'Positive', dt: '05-09-2018 15:30' },
-    { id: 2, mediatype: 'News', newstype: 'Rebuttals', channeltype: 'Handelsblatt', sentiment: 'Negative', dt: '05-09-2018 16:30' },
-    { id: 3, mediatype: 'TV', newstype: 'Rebuttals', channeltype: 'Bayerischer Rundfunk', sentiment: 'Neutral', dt: '05-09-2018 16:33' },
-    { id: 4, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Positive', dt: '06-09-2018 15:30' },
-    { id: 5, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Negative', dt: '06-09-2018 15:35' },
-    { id: 6, mediatype: 'News', newstype: 'Tickers/Announcement', channeltype: 'Handelsblatt', sentiment: 'Neutral', dt: '06-09-2018 16:30' }
-    ];
-    this.dataSource = new MatTableDataSource(tableArr);
-    this.dataSource.sort = this.sort;
-  }
+  
 
   onMediaTypeChange(mediaTypeId) {
     console.log(mediaTypeId);
@@ -246,8 +215,34 @@ export class MediaReportsComponent implements OnInit {
     console.log(this.newsTypeArray);   
 }
 
-  addNew(){
-    this.router.navigate(['addmedianews']);
+search(){
+  debugger;
+  let searchParams = {
+      mediaTypeId: this.searchRecordForm.controls['MediaType'].value,
+      newsTypeId: this.searchRecordForm.get('NewsType').value != null ? this.searchRecordForm.get('NewsType').value.key : "",
+      channelId: this.searchRecordForm.get('ChannelType').value != null ? this.searchRecordForm.get('ChannelType').value.key : "",
+      sentimentId: this.searchRecordForm.get('Sentiment').value,
+      fromDate: this.selected != null ? this.selected.startDate.month() + 1 + "/" + this.selected.startDate.date() + "/" + this.selected.startDate.year().toString().substr(-2) : "",
+      toDate: this.selected != null ? this.selected.endDate.month() + 1 + "/" + this.selected.endDate.date() + "/" + this.selected.endDate.year().toString().substr(-2)  : ""
   }
+  
+  console.log(searchParams);
+  this.apiService.postData('https://6h8ekj594f.execute-api.us-east-2.amazonaws.com/prod',searchParams)
+    .subscribe(response => {
+      console.log(response);
+      if(response.success){
+        console.log(response.data);
+      } else {
+        alert("Records fetching failed");
+      }
+    },
+      (error: Response) => {
+        if (error.status === 400) {
+          console.log('Bad request')
+        } else {
+          console.log(error);
+        }
+      })
+}
 
 }

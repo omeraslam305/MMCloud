@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
       displayedColumns = [];
       // selected: {startdDate: Moment.is, endDate: Moment};
       @ViewChild(MatSort) sort: MatSort;
+      @ViewChild(MatPaginator) paginator: MatPaginator;
 
       selected: any;
       alwaysShowCalendars: boolean;
@@ -111,7 +112,7 @@ export class DashboardComponent implements OnInit {
         mediaTypeId: "2"
       }, {
         id: "11",
-        newsTypeName: "News Report(KE Stance, Editorial, News Story)",
+        newsTypeName: "News Report",
         mediaTypeId: "3"
       },
       {
@@ -216,9 +217,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.displayedColumns = this.columnNames.map(x => x.id);
-    this.createTable();
-
-    
+    this.search();    
   }
 
   searchRecordForm = new FormGroup({
@@ -236,8 +235,36 @@ export class DashboardComponent implements OnInit {
     { id: 3, mediatype: 'TV', newstype: 'Rebuttals', channeltype: 'Bayerischer Rundfunk', sentiment: 'Neutral', dt: '05-09-2018 16:33' },
     { id: 4, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Positive', dt: '06-09-2018 15:30' },
     { id: 5, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Negative', dt: '06-09-2018 15:35' },
+    { id: 6, mediatype: 'News', newstype: 'Tickers/Announcement', channeltype: 'Handelsblatt', sentiment: 'Neutral', dt: '06-09-2018 16:30' },
+    { id: 1, mediatype: 'TV', newstype: 'Tickers/Announcement', channeltype: 'Bayerischer Rundfunk', sentiment: 'Positive', dt: '05-09-2018 15:30' },
+    { id: 2, mediatype: 'News', newstype: 'Rebuttals', channeltype: 'Handelsblatt', sentiment: 'Negative', dt: '05-09-2018 16:30' },
+    { id: 3, mediatype: 'TV', newstype: 'Rebuttals', channeltype: 'Bayerischer Rundfunk', sentiment: 'Neutral', dt: '05-09-2018 16:33' },
+    { id: 4, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Positive', dt: '06-09-2018 15:30' },
+    { id: 5, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Negative', dt: '06-09-2018 15:35' },
+    { id: 6, mediatype: 'News', newstype: 'Tickers/Announcement', channeltype: 'Handelsblatt', sentiment: 'Neutral', dt: '06-09-2018 16:30' },
+    { id: 1, mediatype: 'TV', newstype: 'Tickers/Announcement', channeltype: 'Bayerischer Rundfunk', sentiment: 'Positive', dt: '05-09-2018 15:30' },
+    { id: 2, mediatype: 'News', newstype: 'Rebuttals', channeltype: 'Handelsblatt', sentiment: 'Negative', dt: '05-09-2018 16:30' },
+    { id: 3, mediatype: 'TV', newstype: 'Rebuttals', channeltype: 'Bayerischer Rundfunk', sentiment: 'Neutral', dt: '05-09-2018 16:33' },
+    { id: 4, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Positive', dt: '06-09-2018 15:30' },
+    { id: 5, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Negative', dt: '06-09-2018 15:35' },
+    { id: 6, mediatype: 'News', newstype: 'Tickers/Announcement', channeltype: 'Handelsblatt', sentiment: 'Neutral', dt: '06-09-2018 16:30' },
+    { id: 1, mediatype: 'TV', newstype: 'Tickers/Announcement', channeltype: 'Bayerischer Rundfunk', sentiment: 'Positive', dt: '05-09-2018 15:30' },
+    { id: 2, mediatype: 'News', newstype: 'Rebuttals', channeltype: 'Handelsblatt', sentiment: 'Negative', dt: '05-09-2018 16:30' },
+    { id: 3, mediatype: 'TV', newstype: 'Rebuttals', channeltype: 'Bayerischer Rundfunk', sentiment: 'Neutral', dt: '05-09-2018 16:33' },
+    { id: 4, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Positive', dt: '06-09-2018 15:30' },
+    { id: 5, mediatype: 'Radio', newstype: 'News Report', channeltype: 'Der Tagesspiegel', sentiment: 'Negative', dt: '06-09-2018 15:35' },
     { id: 6, mediatype: 'News', newstype: 'Tickers/Announcement', channeltype: 'Handelsblatt', sentiment: 'Neutral', dt: '06-09-2018 16:30' }
     ];
+    this.dataSource = new MatTableDataSource(tableArr);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  renderMediaRecords(mediaNewsList) {
+    let tableArr: MediaNews[] = [];
+    mediaNewsList.forEach(function(i){
+      tableArr.push({ id: i.Id, mediatype: i.MediaTypeName, newstype: i.NewsTypeName, channeltype: i.ChannelName, sentiment: i.SentimentName, dt: i.NewsDate + " " + i.NewsTime });
+    });    
     this.dataSource = new MatTableDataSource(tableArr);
     this.dataSource.sort = this.sort;
   }
@@ -267,28 +294,24 @@ export class DashboardComponent implements OnInit {
 
   search(){
     
-    // let formData = {
-    //     mediaTypeId: "",//this.searchRecordForm.controls['MediaType'].value,
-    //     newsTypeId: "",//this.searchRecordForm.get('NewsType').value.key,
-    //     channelId: "",//this.searchRecordForm.get('ChannelType').value.key,
-    //     sentimentId: "",//this.searchRecordForm.get('Sentiment').value,
-    //     fromDate: "",
-    //     toDate: ""
-    // }
-
-    let formData = {
-      mediaTypeId: "1",
-      newsTypeId: "",
-      channelId: "",
-      sentimentId: "",
-      fromDate: "",
-      toDate: ""
-  }
-    console.log(formData);
-
-    this.apiService.getMediaNews(formData)
+    let searchParams = {
+        mediaTypeId: this.searchRecordForm.controls['MediaType'].value,
+        newsTypeId: this.searchRecordForm.get('NewsType').value != null ? this.searchRecordForm.get('NewsType').value.key : "",
+        channelId: this.searchRecordForm.get('ChannelType').value != null ? this.searchRecordForm.get('ChannelType').value.key : "",
+        sentimentId: this.searchRecordForm.get('Sentiment').value,
+        fromDate: this.selected != null ? this.selected.startDate.month() + 1 + "/" + this.selected.startDate.date() + "/" + this.selected.startDate.year().toString().substr(-2) : "",
+        toDate: this.selected != null ? this.selected.endDate.month() + 1 + "/" + this.selected.endDate.date() + "/" + this.selected.endDate.year().toString().substr(-2) : ""
+    }
+    
+    console.log(searchParams);
+    this.apiService.postData('https://osnorfg4k6.execute-api.us-east-2.amazonaws.com/prod',searchParams)
       .subscribe(response => {
         console.log(response);
+        if(response.success){
+          this.renderMediaRecords(response.data);
+        } else {
+          alert("Records fetching failed");
+        }
       },
         (error: Response) => {
           if (error.status === 400) {

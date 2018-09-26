@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debug } from 'util';
 import { AmazingTimePickerService } from 'amazing-time-picker';
+import { ApiService } from '../services/api.service';
 
 export interface DropDownVal {
   key: string;
@@ -161,7 +162,7 @@ export class AddMediaNewsComponent implements OnInit {
     mediaTypeId: "3"
   }];
 
-constructor(private router: Router,private atp: AmazingTimePickerService) { }
+constructor(private router: Router,private atp: AmazingTimePickerService,private apiService: ApiService) { }
 
 newsTypeArray: DropDownVal[] = [];
 channelArray: DropDownVal[] = [];
@@ -202,18 +203,40 @@ channelArray: DropDownVal[] = [];
 submitForm(){
   debugger;
   let formData = {
-      mediaType: this.addNewsForm.controls['MediaType'].value,
-      newsType: this.addNewsForm.get('NewsType').value.key,
-      channelType: this.addNewsForm.get('ChannelType').value.key,
-      sentiment: this.addNewsForm.get('Sentiment').value,
+      mediaTypeId: this.addNewsForm.controls['MediaType'].value,
+      newsTypeId: this.addNewsForm.get('NewsType').value != null ? this.addNewsForm.get('NewsType').value.key : "",
+      channelId: this.addNewsForm.get('ChannelType').value ? this.addNewsForm.get('ChannelType').value.key : "",
+      sentimentId: this.addNewsForm.get('Sentiment').value,
       subject: this.addNewsForm.get('Subject').value,
       script: this.addNewsForm.get('Script').value,
-      date: this.addNewsForm.get('Date').value,
-      time: this.addNewsForm.get('Time').value
+      newsDate: this.addNewsForm.get('Date').value,
+      newsTime: this.addNewsForm.get('Time').value
   }
 
+  formData.newsDate = formData.newsDate.getMonth() + 1 + "/" + formData.newsDate.getDate() + "/" + formData.newsDate.getYear().toString().substr(-2);
+
   console.log(formData);
-  this.router.navigate(['dashboard']);
+    debugger;
+    this.apiService.postData('https://s8gyx6vyed.execute-api.us-east-2.amazonaws.com/prod',formData)
+      .subscribe(response => {
+        console.log(response);
+        if(response.success){
+          alert("Records added successfully");
+          this.router.navigate(['dashboard']);
+        } else {
+          alert("Records fetching failed");
+        }
+      },
+        (error: Response) => {
+          if (error.status === 400) {
+            console.log('Bad request')
+          } else {
+            console.log(error);
+          }
+        })
+
+  
+  
 }
 
 }

@@ -8,11 +8,11 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 import { MatTableModule } from '@angular/material';
+import { MatPaginatorModule } from '@angular/material';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { FooterComponent } from './footer/footer.component';
-import { PropertyDetailsComponent } from './property-details/property-details.component';
 import { MaterialComponentsModule } from './modules/material.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ApiService } from './services/api.service';
@@ -32,7 +32,6 @@ import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
     HeaderComponent,
     HomeComponent,
     FooterComponent,
-    PropertyDetailsComponent,
     PageNotFoundComponent,
     SnakbarComponent,
     DashboardComponent,
@@ -54,6 +53,7 @@ import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
     HttpModule,
     HttpClientModule,
     MatTableModule,
+    MatPaginatorModule,
     AmazingTimePickerModule,
     NgxDaterangepickerMd,
     AgmCoreModule.forRoot({

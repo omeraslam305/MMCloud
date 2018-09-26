@@ -5,7 +5,6 @@ import { HomeComponent } from '../home/home.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { AddMediaNewsComponent } from '../add-media-news/add-media-news.component';
 import { MediaReportsComponent } from '../media-reports/media-reports.component';
-import { PropertyDetailsComponent } from '../property-details/property-details.component';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 import { AuthGuard } from '../services/auth.guard';
 
@@ -13,10 +12,6 @@ const appRoutes: Routes = [
     {
         path: 'home',
         component: HomeComponent 
-    },
-    {
-        path: 'property/:id',
-        component: PropertyDetailsComponent
     },
     {
         path: '',

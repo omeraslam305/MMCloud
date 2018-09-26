@@ -23,7 +23,6 @@ export class HomeComponent implements OnInit {
     adType: ''
   };
   apiCalled = false;
-  hostLink: any;
   userData : User;
 
   constructor(private apiService: ApiService,
@@ -32,8 +31,10 @@ export class HomeComponent implements OnInit {
 
   // Getting the recent properties on init
   ngOnInit() {
+    if(localStorage["userObj"] != null){
+      this.router.navigate(['dashboard']);
+    }
     this.apiCalled = false;
-    this.hostLink = this.apiService.END_POINT;
 
     // this.apiService.getAllProperties()
     //   .subscribe(response => {
@@ -57,24 +58,27 @@ export class HomeComponent implements OnInit {
 
 // Function for login
 
-login() {
-    let loginData = {
-        username: this.loginForm.controls['username'].value,
+  login() {
+      let loginData = {
+          username: this.loginForm.controls['username'].value,
+          password: this.loginForm.get('password').value
+      }
+      this.userData = {
+        email: this.loginForm.controls['username'].value,
         password: this.loginForm.get('password').value
     }
-
-    this.userData = {
-      userName: this.loginForm.controls['username'].value,
-      password: this.loginForm.get('password').value
+      //implement login call
+      console.log(this.userData);
+      this.apiService.login('https://a20lhd1482.execute-api.us-east-2.amazonaws.com/prod', this.userData)
+          .subscribe(response => {
+            console.log('user data', response);
+            if(response.success){
+              localStorage.setItem("userObj",JSON.stringify(response.data[0]));
+              this.apiService.loggedIn.next(true);
+              this.router.navigate(['dashboard']);
+            } else {
+              alert("Email or password is incorrect");
+            }
+          });    
   }
-    //implement login call
-    console.log(this.userData);
-    var data = {"userId":1,"userName":"omeraslam", "firstName":"Omer", "lastName":"Aslam","userType" : 1};
-    localStorage.setItem("userObj",JSON.stringify(data));
-    this.apiService.login(this.userData);
-    console.log("Login value : " + this.apiService.isLoggedIn);
-    this.router.navigate(['dashboard']);
-}
-
-
 }
