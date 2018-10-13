@@ -85,7 +85,7 @@
                 <mat-table #table [dataSource]="dataSource" matSort>
                     <ng-container matColumnDef="id">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
-                      <mat-cell *matCellDef="let element"><a href="/addmedianews?id={{element['id']}}" (click)="getData(element['id'])">{{element["id"]}}</a>  </mat-cell>
+                      <mat-cell *matCellDef="let element"><a href="javascript:" (click)="getData(element['id'])">{{element["id"]}}</a>  </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="mediatype">
                         <mat-header-cell *matHeaderCellDef mat-sort-header> Media Type </mat-header-cell>

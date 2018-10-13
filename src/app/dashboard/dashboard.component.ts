@@ -290,6 +290,7 @@ export class DashboardComponent implements OnInit {
   }
 
   addNew(){
+    localStorage.removeItem("mediarecords");
     this.router.navigate(['addmedianews']);
   }
 
@@ -329,6 +330,6 @@ export class DashboardComponent implements OnInit {
       return i.Id == id;
     })[0];
     localStorage["mediarecords"] = JSON.stringify(recordDetail);
-    return true;
+    this.router.navigate(['addmedianews']);
   }
 }

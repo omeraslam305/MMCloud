@@ -168,21 +168,25 @@ export class AddMediaNewsComponent implements OnInit {
 
   recordId : number;
 
-constructor(private router: Router,private atp: AmazingTimePickerService,private apiService: ApiService, private route: ActivatedRoute) {
-    this.route.queryParams.subscribe(params => {
-      this.recordId = params['id'] != null ? parseInt(params['id']) : 0;
-      if(this.recordId > 0){
-        var recordDetail = JSON.parse(localStorage["mediarecords"]);
-        this.addNewsForm.controls['MediaType'].setValue(recordDetail.MediaTypeId);
-        this.onMediaTypeChange(recordDetail.MediaTypeId,true);
-        this.addNewsForm.controls['Sentiment'].setValue(recordDetail.SentimentId);
-        this.addNewsForm.controls['Subject'].setValue(recordDetail.Subject);
-        this.addNewsForm.controls['Script'].setValue(recordDetail.Script);
-        this.addNewsForm.controls['Date'].setValue(recordDetail.NewsDate);
-        this.addNewsForm.controls['Time'].setValue(recordDetail.NewsTime);
-        this.disableBtn = true;
-      }
-    });
+constructor(private router: Router,private atp: AmazingTimePickerService,private apiService: ApiService) {
+    // this.route.queryParams.subscribe(params => {
+    //   this.recordId = params['id'] != null ? parseInt(params['id']) : 0;
+    //   if(this.recordId > 0){
+        
+    //   }
+    // });
+
+        if(localStorage["mediarecords"] != null){
+          var recordDetail = JSON.parse(localStorage["mediarecords"]);
+          this.addNewsForm.controls['MediaType'].setValue(recordDetail.MediaTypeId);
+          this.onMediaTypeChange(recordDetail.MediaTypeId,true);
+          this.addNewsForm.controls['Sentiment'].setValue(recordDetail.SentimentId);
+          this.addNewsForm.controls['Subject'].setValue(recordDetail.Subject);
+          this.addNewsForm.controls['Script'].setValue(recordDetail.Script);
+          this.addNewsForm.controls['Date'].setValue(recordDetail.NewsDate);
+          this.addNewsForm.controls['Time'].setValue(recordDetail.NewsTime);
+          this.disableBtn = true;
+        }
  }
 
 newsTypeArray = [];
